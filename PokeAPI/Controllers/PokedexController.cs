@@ -22,7 +22,7 @@ public class PokedexController : ControllerBase
     {
         try
         {
-            return Ok(await _pokedexService.GetPokemonDataByName(pokemonName));
+            return Ok(await _pokedexService.ReturnBasicPokemonInfo(pokemonName));
         }
         catch (System.Exception)
         {

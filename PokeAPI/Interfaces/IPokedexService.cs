@@ -8,7 +8,6 @@ namespace PokeAPI.Interfaces
 {
     public interface IPokedexService
     {
-        Task<PokemonDataSchema> GetPokemonDataByName(string name);
-        Task<PokemonSpeciesDataSchema> GetPokemonSpeciesDataByName(string name);
+        Task<PokedexBasicResponse> ReturnBasicPokemonInfo(string name);
     }
 }

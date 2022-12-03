@@ -22,7 +22,23 @@ namespace PokeAPI.Services
             pokemonSpeciesEndpoint = config["PokemonSpeciesEndpoint"];
         }
 
-        public async Task<PokemonDataSchema> GetPokemonDataByName(string name)
+        public async Task<PokedexBasicResponse> ReturnBasicPokemonInfo(string name)
+        {
+            var pokemonData = await GetPokemonDataByName(name);
+            var pokemonSpeciesData = await GetPokemonSpeciesDataByName(pokemonData.species.name);
+
+            var allPokemonData = new PokedexBasicResponse
+            {
+                Name = name,
+                Description = ReplaceCharsWithSpaces(pokemonSpeciesData.flavor_text_entries?.First().flavor_text),
+                Habitat = pokemonSpeciesData.habitat?.name,
+                IsLegendary = pokemonSpeciesData.is_legendary
+            };
+
+            return allPokemonData;
+        }
+
+        private async Task<PokemonDataSchema> GetPokemonDataByName(string name)
         {
             var request =  pokemonEndpoint + name;
             HttpResponseMessage response = await _client.GetAsync(request);
@@ -39,7 +55,7 @@ namespace PokeAPI.Services
             }       
         }
 
-        public async Task<PokemonSpeciesDataSchema> GetPokemonSpeciesDataByName(string name)
+        private async Task<PokemonSpeciesDataSchema> GetPokemonSpeciesDataByName(string name)
         {
             var request = pokemonSpeciesEndpoint + name;
             HttpResponseMessage response = await _client.GetAsync(request);
@@ -56,5 +72,10 @@ namespace PokeAPI.Services
             } 
         }
 
+        private string ReplaceCharsWithSpaces(string description)
+        {
+            description = description.Replace("\n", " ");
+            return description.Replace("\f", " ");
+        }
     }
 }
