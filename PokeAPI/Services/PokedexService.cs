@@ -14,12 +14,14 @@ namespace PokeAPI.Services
         private readonly HttpClient _client;
         private readonly string pokemonEndpoint;
         private readonly string pokemonSpeciesEndpoint;
+        private readonly string yodaTranslationEndpoint;
 
         public PokedexService(IConfiguration config, IHttpClientFactory clientFactory)
         {
             _client = clientFactory.CreateClient("Pokedex");
             pokemonEndpoint = config["PokemonEndpoint"];
             pokemonSpeciesEndpoint = config["PokemonSpeciesEndpoint"];
+            yodaTranslationEndpoint = config["YodaTranslationEndpoint"];
         }
 
         public async Task<PokedexBasicResponse> ReturnBasicPokemonInfo(string name)
@@ -34,6 +36,13 @@ namespace PokeAPI.Services
                 Habitat = pokemonSpeciesData.habitat?.name,
                 IsLegendary = pokemonSpeciesData.is_legendary
             };
+
+            return allPokemonData;
+        }
+
+        public PokedexBasicResponse ReturnTranslatedPokemonInfo(string name)
+        {
+            var allPokemonData = new PokedexBasicResponse{};
 
             return allPokemonData;
         }
@@ -69,6 +78,23 @@ namespace PokeAPI.Services
             else
             {
                 throw new HttpRequestException($"Operation to retrieve Pokemon Species data has failed: {result}");
+            } 
+        }
+
+        private async Task<YodaTranslationDataSchema> GetYodaTranslation(string sentence)
+        {
+            var request = yodaTranslationEndpoint + $"?text={sentence}";
+            HttpResponseMessage response = await _client.GetAsync(request);
+            var result = await response.Content.ReadAsStringAsync();
+
+            if(response.IsSuccessStatusCode)
+            {
+                var yodaTranslation = JsonSerializer.Deserialize<YodaTranslationDataSchema>(result);
+                return yodaTranslation;
+            }
+            else
+            {
+                throw new HttpRequestException($"Operation to retrieve Yoda Translation data has failed: {result}");
             } 
         }
 
