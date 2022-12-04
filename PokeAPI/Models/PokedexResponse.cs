@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PokeAPI.Models
 {
-    public class PokedexBasicResponse
+    public class PokedexResponse
     {
         public string Name { get; set; }
         public string Description { get; set; }

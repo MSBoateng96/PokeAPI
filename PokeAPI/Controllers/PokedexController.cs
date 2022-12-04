@@ -17,19 +17,30 @@ public class PokedexController : ControllerBase
         _pokedexService = pokedexService;
     }
 
-    [HttpGet("{pokemonName}")]
-    public async Task<ActionResult<PokemonSpeciesDataSchema>> GetBasicPokemonInformation(string pokemonName)
+    [HttpGet("{name}")]
+    public async Task<ActionResult<PokedexResponse>> GetBasicPokemonInformation(string name)
     {
         try
         {
-            return Ok(await _pokedexService.ReturnBasicPokemonInfo(pokemonName));
+            return Ok(await _pokedexService.ReturnBasicPokemonInfo(name));
         }
-        catch (System.Exception)
+        catch (Exception ex)
         {
             
-            throw;
+            throw ex;
         }
+    }
 
-        return null;
+    [HttpGet("translated/{name}")]
+    public async Task<ActionResult<PokedexResponse>> GetTranslatedPokemonInformation(string name)
+    {
+        try
+        {
+            return Ok(await _pokedexService.ReturnTranslatedPokemonInfo(name));
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 }
