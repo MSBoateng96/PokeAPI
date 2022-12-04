@@ -18,7 +18,10 @@ namespace PokeAPI.Services
 
         public PokedexService(IConfiguration config, IHttpClientFactory clientFactory)
         {
+            // Create new HTTP client to aid REST API calls
             _client = clientFactory.CreateClient("Pokedex");
+
+            // Obtain API endpoint string values from app settings config
             pokemonEndpoint = config["PokemonEndpoint"];
             pokemonSpeciesEndpoint = config["PokemonSpeciesEndpoint"];
             yodaTranslationEndpoint = config["YodaTranslationEndpoint"];
@@ -54,12 +57,13 @@ namespace PokeAPI.Services
 
         private async Task<PokemonDataSchema> GetPokemonDataByName(string name)
         {
-            var request =  pokemonEndpoint + name;
-            HttpResponseMessage response = await _client.GetAsync(request);
-            var result = await response.Content.ReadAsStringAsync();
+            var request =  pokemonEndpoint + name; // Create URL request with parameter
+            HttpResponseMessage response = await _client.GetAsync(request); // Send GET request to API
+            var result = await response.Content.ReadAsStringAsync(); // Read request response as string
 
             if(response.IsSuccessStatusCode)
             {
+                // Deserialize JSON response to PokemonDataSchema object
                 var pokemon = JsonSerializer.Deserialize<PokemonDataSchema>(result);
                 return pokemon;
             }
@@ -71,12 +75,13 @@ namespace PokeAPI.Services
 
         private async Task<PokemonSpeciesDataSchema> GetPokemonSpeciesDataByName(string name)
         {
-            var request = pokemonSpeciesEndpoint + name;
-            HttpResponseMessage response = await _client.GetAsync(request);
-            var result = await response.Content.ReadAsStringAsync();
+            var request = pokemonSpeciesEndpoint + name; // Create URL request with parameter
+            HttpResponseMessage response = await _client.GetAsync(request); // Send GET request to API
+            var result = await response.Content.ReadAsStringAsync(); // Read request response as string
 
             if(response.IsSuccessStatusCode)
             {
+                // Deserialize JSON response to PokemonSpeciesDataSchema object
                 var pokemonSpecies = JsonSerializer.Deserialize<PokemonSpeciesDataSchema>(result);
                 return pokemonSpecies;
             }
@@ -89,9 +94,9 @@ namespace PokeAPI.Services
         
         private async Task<string[]> GetYodaTranslation(string sentence) //private async Task<YodaTranslationDataSchema> GetYodaTranslation(string sentence)
         {
-            var request = yodaTranslationEndpoint + $"?text={sentence}";
-            HttpResponseMessage response = await _client.GetAsync(request);
-            var result = await response.Content.ReadAsStringAsync();
+            var request = yodaTranslationEndpoint + $"?text={sentence}"; // Create URL request with parameter
+            HttpResponseMessage response = await _client.GetAsync(request); // Send GET request to API
+            var result = await response.Content.ReadAsStringAsync(); // Read request response as string
 
             if(response.IsSuccessStatusCode)
             {

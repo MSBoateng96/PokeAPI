@@ -22,11 +22,12 @@ public class PokedexController : ControllerBase
     {
         try
         {
+            // Return 200 OK Response
             return Ok(await _pokedexService.ReturnBasicPokemonInfo(name));
         }
         catch (Exception ex)
         {
-            
+            // Return exception if there is an internal server error
             throw ex;
         }
     }
@@ -36,10 +37,12 @@ public class PokedexController : ControllerBase
     {
         try
         {
+            // Return 200 OK Response
             return Ok(await _pokedexService.ReturnTranslatedPokemonInfo(name));
         }
         catch (Exception ex)
-        {
+        {   
+            // Return exception if there is an internal server error
             throw ex;
         }
     }

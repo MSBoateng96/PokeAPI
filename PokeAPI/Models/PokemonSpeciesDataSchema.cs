@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace PokeAPI.Models
 {
+    // Schema class for response from Poke API: Pokemon Species
     public class PokemonSpeciesDataSchema
     {
         public bool is_legendary { get; set; }

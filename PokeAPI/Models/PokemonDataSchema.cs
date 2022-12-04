@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace PokeAPI.Models
 {
+    // Schema class for response from Poke API: Pokemon
     public class PokemonDataSchema
     {
         public int id { get; set; }

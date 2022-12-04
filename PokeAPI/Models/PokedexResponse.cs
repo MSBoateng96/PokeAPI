@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace PokeAPI.Models
 {
+    // Schema class for response from my own API
     public class PokedexResponse
     {
         public string Name { get; set; }

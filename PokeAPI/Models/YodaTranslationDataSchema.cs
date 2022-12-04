@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace PokeAPI.Models
 {
+    // Schema class for response from Fun Translations API: Yoda
     public class YodaTranslationDataSchema
     {
         public YodaTranslationContents contents;
