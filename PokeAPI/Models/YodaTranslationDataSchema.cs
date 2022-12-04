@@ -7,7 +7,7 @@ namespace PokeAPI.Models
 {
     public class YodaTranslationDataSchema
     {
-        public YodaTranslationContents? contents;
+        public YodaTranslationContents contents;
     }
 
     public class YodaTranslationContents

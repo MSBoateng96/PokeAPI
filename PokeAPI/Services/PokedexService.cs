@@ -24,12 +24,12 @@ namespace PokeAPI.Services
             yodaTranslationEndpoint = config["YodaTranslationEndpoint"];
         }
 
-        public async Task<PokedexBasicResponse> ReturnBasicPokemonInfo(string name)
+        public async Task<PokedexResponse> ReturnBasicPokemonInfo(string name)
         {
             var pokemonData = await GetPokemonDataByName(name);
             var pokemonSpeciesData = await GetPokemonSpeciesDataByName(pokemonData.species.name);
 
-            var allPokemonData = new PokedexBasicResponse
+            var allPokemonData = new PokedexResponse
             {
                 Name = name,
                 Description = ReplaceCharsWithSpaces(pokemonSpeciesData.flavor_text_entries?.First().flavor_text),
@@ -40,9 +40,14 @@ namespace PokeAPI.Services
             return allPokemonData;
         }
 
-        public PokedexBasicResponse ReturnTranslatedPokemonInfo(string name)
+        public async Task<PokedexResponse> ReturnTranslatedPokemonInfo(string name)
         {
-            var allPokemonData = new PokedexBasicResponse{};
+            var allPokemonData = await ReturnBasicPokemonInfo(name);
+
+            var yodaTranslation = await GetYodaTranslation(allPokemonData.Description);
+            string translatedDescription = yodaTranslation[9]; // SEE issue described in yodaTranslation()
+            // string translatedDescription = yodaTranslation?.contents.translated;
+            allPokemonData.Description = translatedDescription;
 
             return allPokemonData;
         }
@@ -81,7 +86,8 @@ namespace PokeAPI.Services
             } 
         }
 
-        private async Task<YodaTranslationDataSchema> GetYodaTranslation(string sentence)
+        
+        private async Task<string[]> GetYodaTranslation(string sentence) //private async Task<YodaTranslationDataSchema> GetYodaTranslation(string sentence)
         {
             var request = yodaTranslationEndpoint + $"?text={sentence}";
             HttpResponseMessage response = await _client.GetAsync(request);
@@ -89,8 +95,13 @@ namespace PokeAPI.Services
 
             if(response.IsSuccessStatusCode)
             {
-                var yodaTranslation = JsonSerializer.Deserialize<YodaTranslationDataSchema>(result);
-                return yodaTranslation;
+                // Unable to deserialize Yoda API JSON as the raw format includes new line characters and whitespaces.
+                // var yodaTranslation = JsonSerializer.Deserialize<YodaTranslationDataSchema>(result);
+                // return yodaTranslation;
+
+                //Temporary workaround: split string on " character
+                var contents = result.Split('"');
+                return contents;
             }
             else
             {
