@@ -18,7 +18,7 @@ Endpoint: http://localhost:5270/pokemon/{name}
 Example: http://localhost:5270/pokemon/mewtwo
 
 Translated Pokemon Information
-Endpoint: http://localhost:5270/pokemon/{name}
+Endpoint: http://localhost:5270/pokemon/translated/{name}
 
 Example: http://localhost:5270/pokemon/translated/mewtwo
 
